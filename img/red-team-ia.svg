@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" role="img" aria-label="Red team de IA">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0c1530"/><stop offset="1" stop-color="#0a1128"/></linearGradient>
+    <linearGradient id="ln" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5b8bff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <circle cx="400" cy="200" r="130" fill="none" stroke="#5b8bff" stroke-opacity="0.15" stroke-width="2"/>
+  <circle cx="400" cy="200" r="90" fill="none" stroke="#5b8bff" stroke-opacity="0.2" stroke-width="2"/>
+  <path d="M400 120 L468 146 V200 C468 246 440 276 400 292 C360 276 332 246 332 200 V146 Z" fill="none" stroke="url(#ln)" stroke-width="3" stroke-linejoin="round"/>
+  <circle cx="400" cy="200" r="16" fill="none" stroke="#22d3ee" stroke-width="3"/>
+  <path d="M400 176 V184 M400 216 V224 M376 200 H384 M416 200 H424" stroke="#22d3ee" stroke-width="3" stroke-linecap="round"/>
+</svg>
