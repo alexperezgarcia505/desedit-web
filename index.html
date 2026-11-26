@@ -373,12 +373,13 @@
     transform: translateY(-2px) rotate(-4deg);
     filter: drop-shadow(0 8px 24px rgba(91,139,255,.55));
   }
-  .hero-logo .logo-word { display: inline-flex; align-items: baseline; }
-  .hero-logo .logo-word b {
+  .hero-logo .logo-word {
+    display: inline-flex; align-items: baseline;
     font-weight: 600;
     background: linear-gradient(90deg, #5b8bff, #22d3ee);
     -webkit-background-clip: text; background-clip: text; color: transparent;
   }
+  .hero-logo .logo-word b { font-weight: 600; color: transparent; background: none; }
   @media (max-width: 640px) {
     .hero-logo { font-size: 32px; gap: 11px; }
     .hero-logo .logo-mark { width: 38px; height: 38px; }
