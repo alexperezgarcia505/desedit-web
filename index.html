@@ -1195,7 +1195,7 @@
           <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
         </button>
         <div class="nav-dropdown" id="cybersecurity-dropdown" role="menu">
-          <a href="pentesting.html" role="menuitem">Test de intrusión (pentesting)</a>
+          <a href="pentesting.html" role="menuitem">Análisis y pruebas de intrusión</a>
           <a href="analisis-vulnerabilidades.html" role="menuitem">Análisis de vulnerabilidades</a>
           <a href="auditoria-aplicaciones-web.html" role="menuitem">Auditoría de aplicaciones web</a>
           <a href="auditoria-redes-fw-wifi.html" role="menuitem">Auditoría de redes locales, FW y Wi-Fi</a>
@@ -1276,7 +1276,7 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
           </svg>
-          <div><strong>Pentesting y red team</strong><span>Antes de que lo haga un atacante</span></div>
+          <div><strong>Análisis de infraestructura</strong><span>Blue team: detectar antes que un atacante</span></div>
         </div>
         <div class="hero-highlight">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -1554,10 +1554,10 @@
           <circle cx="7" cy="17" r="0.6" fill="currentColor" stroke="none"/>
           <path d="M12 10v4"/>
         </svg>
-        <h3>Auditorías técnicas y pentesting</h3>
-        <p>Ponemos a prueba tus sistemas como lo haría un atacante real, de forma controlada y con permiso, para encontrar los fallos antes que ellos.</p>
+        <h3>Análisis técnico de infraestructura</h3>
+        <p>Analizamos tu infraestructura de forma completa: sistemas, aplicaciones y redes. Para confirmar qué fallos son realmente explotables, complementamos el análisis con pruebas de intrusión controladas y con permiso.</p>
         <ul>
-          <li>Test de intrusión (Pentesting)</li>
+          <li>Pruebas de intrusión como parte del análisis</li>
           <li>Análisis de vulnerabilidades</li>
           <li>Auditorías para sitios web</li>
           <li>Auditoría de redes locales, FW y Wi-Fi</li>
@@ -1702,7 +1702,7 @@
       <article class="product-category">
         <div class="product-category-header">
           <span class="product-category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M8 6L2.5 12 8 18"/><path d="M16 6l5.5 6-5.5 6"/><path d="M13.5 4l-3 16"/></svg></span>
-          <div><h3>Pentesting y explotación</h3><small>Test de intrusión controlados</small></div>
+          <div><h3>Análisis y verificación</h3><small>Herramientas de análisis técnico</small></div>
         </div>
         <div class="product-grid">
           <div class="product-logo" style="--brand:#607078"><span class="product-mark">MSF</span><div><strong>Metasploit</strong><span>Explotación de vulnerabilidades</span></div></div>
@@ -2122,7 +2122,7 @@ initNet(pSec, pSec.querySelector('.products-bg'), document.getElementById('produ
   if (!card) return;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var R = [
-    ['Pentest web', 58, 61, 49, 15, [['crit','Inyección SQL en el formulario de acceso'],['high','Sesiones sin caducidad configurada'],['med','Cabeceras de seguridad ausentes'],['low','Versión del servidor visible']], ['ISO 27001','ENS']],
+    ['Análisis web', 58, 61, 49, 15, [['crit','Inyección SQL en el formulario de acceso'],['high','Sesiones sin caducidad configurada'],['med','Cabeceras de seguridad ausentes'],['low','Versión del servidor visible']], ['ISO 27001','ENS']],
     ['Red interna', 66, 74, 60, 11, [['high','Segmentación de red insuficiente'],['high','Protocolos obsoletos habilitados'],['med','Equipos sin agente de seguridad'],['low','Inventario de activos desactualizado']], ['ENS','ISO 27001']],
     ['Cloud', 71, 80, 66, 9, [['crit','Almacenamiento público sin cifrar'],['high','Permisos de administrador excesivos'],['med','Registros de actividad sin retención'],['low','Etiquetado de recursos incompleto']], ['ISO 27001','RGPD']],
     ['Wi-Fi corporativa', 63, 68, 55, 8, [['high','Red de invitados sin aislar'],['med','Clave compartida entre empleados'],['med','Puntos de acceso no autorizados'],['low','Rotación de claves pendiente']], ['ENS','NIS2']],
