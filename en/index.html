@@ -1,0 +1,2192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#0a1128">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>desedit — Cybersecurity and compliance, including AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+
+    --bg: #ffffff;
+    --bg-alt: #f4f6f9;
+    --text-primary: #0f172a;
+    --text-secondary: #51617a;
+    --accent: #2554e8;
+    --accent-dark: #173aad;
+    --border: #e3e8ef;
+    --card-bg: #ffffff;
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0a0f1c;
+      --bg-alt: #0f1729;
+      --text-primary: #eef2f8;
+      --text-secondary: #93a1bd;
+      --accent: #5b8bff;
+      --accent-dark: #7ba0ff;
+      --border: #202c47;
+      --card-bg: #0f1729;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0a0f1c;
+    --bg-alt: #0f1729;
+    --text-primary: #eef2f8;
+    --text-secondary: #93a1bd;
+    --accent: #5b8bff;
+    --accent-dark: #7ba0ff;
+    --border: #202c47;
+    --card-bg: #0f1729;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text-primary);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: 'Space Grotesk', 'Inter', sans-serif;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  a { color: inherit; }
+  img, svg { max-width: 100%; }
+
+  .wrap {
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 28px;
+  }
+
+  /* Header */
+  header {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    background: #0a1128;
+    z-index: 10;
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 16px 28px;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 10px;
+    column-gap: 24px;
+    margin-right: auto;
+    margin-left: 0;
+  }
+  .nav-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: rgba(255,255,255,0.82);
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .15s ease;
+  }
+  .nav-links a:hover { color: #ffffff; }
+  .nav-links .caret { width: 11px; height: 11px; opacity: .75; flex-shrink: 0; transition: transform .18s ease; }
+  .nav-item {
+    position: relative;
+  }
+  .nav-dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: rgba(255,255,255,0.82);
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color .15s ease;
+  }
+  .nav-dropdown-toggle:hover,
+  .nav-dropdown-toggle:focus-visible,
+  .nav-item.open .nav-dropdown-toggle {
+    color: #ffffff;
+  }
+  .nav-dropdown-toggle:focus-visible {
+    outline: 2px solid #7ba0ff;
+    outline-offset: 5px;
+    border-radius: 3px;
+  }
+  .nav-item.open .nav-dropdown-toggle .caret {
+    transform: rotate(180deg);
+  }
+  .nav-dropdown {
+    position: absolute;
+    top: calc(100% + 18px);
+    left: -14px;
+    z-index: 30;
+    width: 310px;
+    padding: 9px 0;
+    border: 1px solid rgba(255,255,255,.12);
+    border-top: 3px solid #3478ff;
+    border-radius: 0 0 10px 10px;
+    background: #ffffff;
+    box-shadow: 0 20px 48px rgba(2, 8, 23, .28);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+  }
+  .nav-item.open .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #development-menu .nav-dropdown,
+  #compliance-menu .nav-dropdown {
+    left: auto;
+    right: -14px;
+  }
+  .nav-dropdown::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 0;
+    right: 0;
+    height: 20px;
+  }
+  .nav-dropdown a {
+    display: block;
+    padding: 7px 15px;
+    color: #334155;
+    font-size: 12.5px;
+    font-weight: 500;
+    line-height: 1.25;
+    white-space: normal;
+    text-transform: uppercase;
+    transition: color .15s ease, background .15s ease, padding-left .15s ease;
+  }
+  .nav-dropdown a:hover,
+  .nav-dropdown a:focus-visible {
+    padding-left: 19px;
+    color: #1646cb;
+    background: #eef4ff;
+    outline: none;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .nav-item:hover .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+    .nav-item:hover .nav-dropdown-toggle .caret {
+      transform: rotate(180deg);
+    }
+  }
+  @media (max-width: 900px) {
+    .nav-dropdown {
+      position: fixed;
+      top: 66px;
+      left: 16px;
+      right: 16px;
+      width: auto;
+      max-height: calc(100vh - 88px);
+      overflow-y: auto;
+    }
+  }
+  .nav-cta {
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    padding: 10px 22px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .15s ease, transform .15s ease;
+  }
+  .nav-cta:hover { background: var(--accent-dark); color: #ffffff; transform: translateY(-2px); }
+  @media (max-width: 640px) {
+    .nav-links { margin-left: 0; column-gap: 16px; }
+    .nav-links a { font-size: 13px; }
+  }
+
+  /* Menú móvil */
+  .nav-burger { display: none; }
+  @media (max-width: 900px) {
+    .header-inner { flex-wrap: nowrap; padding: 12px 16px; gap: 10px; }
+    .header-inner .nav-cta { margin-left: auto; }
+    .nav-cta { padding: 8px 16px; font-size: 13px; }
+    .nav-burger {
+      display: inline-flex; flex-direction: column; justify-content: center; align-items: center; gap: 5px;
+      width: 42px; height: 42px; flex: none; padding: 0; cursor: pointer;
+      border: 1px solid rgba(255,255,255,.22); border-radius: 10px; background: transparent;
+    }
+    .nav-burger span { display: block; width: 18px; height: 2px; border-radius: 2px; background: #fff; transition: transform .25s ease, opacity .2s ease; }
+    header.menu-open .nav-burger span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    header.menu-open .nav-burger span:nth-child(2) { opacity: 0; }
+    header.menu-open .nav-burger span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .nav-links {
+      display: none; position: absolute; top: 100%; left: 0; right: 0; margin: 0;
+      flex-direction: column; align-items: stretch; flex-wrap: nowrap; row-gap: 0;
+      padding: 6px 16px 18px; background: #0a1128; border-top: 1px solid rgba(255,255,255,.1);
+      max-height: calc(100vh - 72px); max-height: calc(100dvh - 72px); overflow-y: auto;
+      box-shadow: 0 24px 40px rgba(2,8,23,.45);
+    }
+    header.menu-open .nav-links { display: flex; }
+    .nav-item { width: 100%; border-bottom: 1px solid rgba(255,255,255,.08); }
+    .nav-links .nav-dropdown-toggle { width: 100%; justify-content: space-between; padding: 15px 2px; font-size: 15px; }
+    .nav-links .nav-dropdown {
+      position: static; width: auto; max-height: none; overflow: visible;
+      display: none; opacity: 1; visibility: visible; transform: none;
+      margin: 0 0 12px; border-radius: 10px; border-top-width: 1px; box-shadow: none;
+    }
+    .nav-links .nav-item.open .nav-dropdown { display: block; }
+    .nav-dropdown::before { display: none; }
+    #development-menu .nav-dropdown, #compliance-menu .nav-dropdown { left: auto; right: auto; }
+    .nav-dropdown a { white-space: normal; padding: 12px 16px; }
+  }
+
+  /* Hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding: 96px 0 88px;
+    background-image:
+      radial-gradient(circle, color-mix(in srgb, var(--text-primary) 8%, transparent) 1px, transparent 1px);
+    background-size: 26px 26px;
+    background-position: -6px -6px;
+  }
+
+  /* Hero background video */
+  .hero-bg { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+  .hero-bg video, .hero-bg canvas { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-bg video { opacity: 0; transition: opacity .8s ease; }
+  .hero-bg.has-video video { opacity: 1; }
+  .hero-bg.has-video canvas { display: none; }
+  .hero-bg::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(90deg, color-mix(in srgb, var(--bg) 82%, transparent) 0%, color-mix(in srgb, var(--bg) 45%, transparent) 42%, color-mix(in srgb, var(--bg) 8%, transparent) 100%),
+      linear-gradient(180deg, color-mix(in srgb, var(--bg) 35%, transparent) 0%, transparent 25%, transparent 78%, var(--bg) 100%);
+  }
+  .hero > .wrap { position: relative; z-index: 1; }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 48px;
+    align-items: center;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 3.4vw, 36px);
+    line-height: 1.22;
+    max-width: 30ch;
+    text-align: left;
+  }
+  .hero-kicker {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 5px 12px;
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--accent) 8%, var(--card-bg));
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero h1 { animation: fadeUp .7s ease-out both; }
+  .hero p { animation: fadeUp .7s ease-out .15s both; }
+  .cta-row { animation: fadeUp .7s ease-out .3s both; }
+  @media (prefers-reduced-motion: reduce) {
+    .hero h1, .hero p, .cta-row { animation: none; }
+  }
+
+  .btn-primary, .btn-ghost {
+    transition: background .15s ease, border-color .15s ease, color .15s ease, transform .15s ease;
+  }
+  .btn-primary:hover, .btn-ghost:hover { transform: translateY(-2px); }
+  .btn-primary:active, .btn-ghost:active { transform: translateY(0); }
+
+  .logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: 0.14em;
+    color: #ffffff;
+    text-decoration: none;
+    position: relative;
+  }
+  .logo::after {
+    content: '';
+    position: absolute;
+    left: 0; bottom: -4px;
+    width: 0;
+    height: 1.5px;
+    background: var(--accent);
+    transition: width .25s ease;
+  }
+  .logo:hover::after { width: 100%; }
+  .hero-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 22px;
+    font-size: 40px;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .hero-logo::after { display: none; }
+  .hero-logo .logo-mark {
+    width: 48px; height: 48px; flex: none;
+    filter: drop-shadow(0 6px 18px rgba(91,139,255,.35));
+    transition: transform .3s ease, filter .3s ease;
+  }
+  .hero-logo:hover .logo-mark {
+    transform: translateY(-2px) rotate(-4deg);
+    filter: drop-shadow(0 8px 24px rgba(91,139,255,.55));
+  }
+  .hero-logo .logo-word {
+    display: inline-flex; align-items: baseline;
+    font-weight: 600;
+    background: linear-gradient(90deg, #5b8bff, #22d3ee);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero-logo .logo-word b { font-weight: 600; color: transparent; background: none; }
+  @media (max-width: 640px) {
+    .hero-logo { font-size: 32px; gap: 11px; }
+    .hero-logo .logo-mark { width: 38px; height: 38px; }
+  }
+  .hero p {
+    margin: 24px 0 32px;
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--text-primary);
+    max-width: 46ch;
+    text-shadow: 0 1px 12px color-mix(in srgb, var(--bg) 85%, transparent);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .hero p { color: #ffffff; }
+  }
+  :root[data-theme="dark"] .hero p { color: #ffffff; }
+  .cta-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-highlights {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+    margin-top: 30px;
+    max-width: 590px;
+  }
+  .hero-highlight {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 64px;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--card-bg) 88%, transparent);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, .05);
+  }
+  .hero-highlight svg {
+    width: 23px;
+    height: 23px;
+    flex: 0 0 auto;
+    color: var(--accent);
+  }
+  .hero-highlight strong {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13px;
+    line-height: 1.25;
+  }
+  .hero-highlight span {
+    display: block;
+    margin-top: 2px;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+  @media (max-width: 560px) {
+    .hero-highlights { grid-template-columns: 1fr; }
+    .hero-highlight { min-height: 58px; }
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+    padding: 13px 26px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    display: inline-block;
+    transition: background .15s ease;
+  }
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn-ghost {
+    padding: 13px 22px;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 15px;
+    text-decoration: none;
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--accent); color: var(--accent); }
+
+
+  /* Hero: tarjeta de informe */
+  .hero-report {
+    width: 100%; max-width: 400px; justify-self: end;
+    padding: 18px 20px 20px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--card-bg) 82%, transparent);
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    box-shadow: 0 20px 50px -20px rgba(0,0,0,.45);
+    font-size: 13px; color: var(--text-primary);
+    animation: fadeUp .8s ease-out .25s both;
+  }
+  .rp-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .rp-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 14px; }
+  .rp-tag { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+    border: 1px solid color-mix(in srgb, var(--accent) 40%, var(--border)); border-radius: 999px; padding: 3px 9px; }
+  .rp-score { display: flex; align-items: center; gap: 16px; position: relative; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .rp-score svg { width: 80px; height: 80px; flex: none; transform: rotate(-90deg); }
+  .rp-track { fill: none; stroke: var(--border); stroke-width: 7; }
+  .rp-arc { fill: none; stroke: var(--accent); stroke-width: 7; stroke-linecap: round;
+    stroke: var(--rc, var(--accent)); stroke-dasharray: 100; stroke-dashoffset: 100; transition: stroke .4s; }
+  .run .rp-arc { animation: rpArc 1.6s ease-out .3s forwards; }
+  .rp-score-num { position: absolute; left: 0; top: 0; width: 80px; height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; }
+  .rp-score-num strong { font-family: 'Space Grotesk', sans-serif; font-size: 24px; line-height: 1; }
+  .rp-score-num span { font-size: 10px; line-height: 1; color: var(--text-secondary); }
+  .rp-score-txt { display: flex; flex-direction: column; gap: 3px; }
+  .rp-score-txt span { color: var(--text-secondary); font-size: 12px; }
+  .rp-list { list-style: none; margin: 14px 0 0; padding: 0 0 14px; border-bottom: 1px solid var(--border); display: grid; gap: 10px; }
+  .rp-list li { display: flex; align-items: center; gap: 10px; opacity: 0; }
+  .run .rp-list li { animation: fadeUp .5s ease-out both; }
+  .run .rp-list li:nth-child(1) { animation-delay: .5s; } .run .rp-list li:nth-child(2) { animation-delay: .65s; }
+  .run .rp-list li:nth-child(3) { animation-delay: .8s; } .run .rp-list li:nth-child(4) { animation-delay: .95s; }
+  .rp-list span { color: var(--text-secondary); }
+  .sev { font-style: normal; font-size: 10px; font-weight: 600; min-width: 52px; text-align: center; padding: 3px 0; border-radius: 4px; flex: none; }
+  .s-crit { background: rgba(255,93,93,.16); color: #ff6b6b; }
+  .s-high { background: rgba(255,159,67,.16); color: #ff9f43; }
+  .s-med  { background: rgba(250,204,21,.16); color: #d9a800; }
+  .s-low  { background: color-mix(in srgb, var(--accent) 16%, transparent); color: var(--accent); }
+  .rp-comp { margin-top: 14px; display: grid; gap: 10px; }
+  .rp-comp > div { display: grid; grid-template-columns: 72px 1fr 34px; align-items: center; gap: 10px; }
+  .rp-comp label { color: var(--text-secondary); font-size: 12px; }
+  .rp-comp b { font-size: 12px; text-align: right; }
+  .rp-bar { height: 6px; border-radius: 99px; background: var(--border); overflow: hidden; }
+  .rp-bar em { display: block; height: 100%; width: 0; border-radius: 99px; background: var(--accent); }
+  .run .rp-bar em { animation: rpBar 1.4s ease-out .8s forwards; }
+  .hero-report > * { transition: opacity .35s ease; }
+  .hero-report.swap > * { opacity: 0; }
+  .hero-report.r-low  { --rc: #34d399; }
+  .hero-report.r-high { --rc: #ff9f43; }
+  .hero-report.r-crit { --rc: #ff5d5d; }
+  .rp-list span { flex: 1; min-width: 0; }
+  @keyframes rpArc { to { stroke-dashoffset: var(--off, 28); } }
+  @keyframes rpBar { to { width: var(--w); } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-report, .rp-list li { animation: none; opacity: 1; }
+    .run .rp-arc, .rp-arc { animation: none; stroke-dashoffset: var(--off, 28); }
+    .run .rp-bar em, .rp-bar em { animation: none; width: var(--w); }
+    .run .rp-list li { animation: none; opacity: 1; }
+    .hero-report > * { transition: none; }
+  }
+
+  .hero-diagram { width: 100%; height: auto; }
+  .hero-diagram path.draw {
+    stroke-dasharray: 900;
+    stroke-dashoffset: 900;
+    animation: draw 1.8s ease-out forwards;
+  }
+  .hero-diagram .flow-lines path {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-dasharray: 2 14;
+    opacity: .85;
+    animation: flowmove 1.4s linear infinite;
+    animation-delay: 2.1s;
+  }
+  @keyframes flowmove { to { stroke-dashoffset: -160; } }
+  .hero-diagram circle.pulse {
+    opacity: 0;
+    animation: fadein .6s ease-out forwards, breathe 2.6s ease-in-out infinite;
+    animation-delay: 1.5s;
+    transform-box: fill-box;
+    transform-origin: center;
+  }
+  @keyframes breathe {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.4); }
+  }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+  @keyframes fadein { to { opacity: 1; } }
+  .hero-diagram .device {
+    fill: var(--card-bg);
+    stroke: var(--accent);
+    stroke-width: 1.5;
+    filter: drop-shadow(0 6px 10px rgba(37, 84, 232, .10));
+  }
+  .hero-diagram .device-detail {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .hero-diagram .device-light {
+    fill: var(--accent);
+    animation: deviceBlink 1.8s ease-in-out infinite;
+  }
+  .hero-diagram .packet {
+    fill: var(--accent);
+    filter: drop-shadow(0 0 4px var(--accent));
+  }
+  .hero-diagram .packet-one { animation: packetOne 4.2s linear infinite; }
+  .hero-diagram .packet-two { animation: packetTwo 4.2s linear infinite 1.15s; }
+  .hero-diagram .packet-three { animation: packetThree 4.2s linear infinite 2.25s; }
+  .hero-diagram .packet-four { animation: packetFour 3.6s linear infinite .55s; }
+  @keyframes deviceBlink {
+    0%, 42%, 100% { opacity: .32; }
+    50%, 72% { opacity: 1; }
+  }
+  @keyframes packetOne {
+    0% { transform: translate(42px, 198px); opacity: 0; }
+    8% { opacity: 1; }
+    42% { transform: translate(42px, 120px); opacity: 1; }
+    72% { transform: translate(158px, 120px); opacity: 1; }
+    100% { transform: translate(158px, 66px); opacity: 0; }
+  }
+  @keyframes packetTwo {
+    0% { transform: translate(158px, 66px); opacity: 0; }
+    10% { opacity: 1; }
+    42% { transform: translate(158px, 120px); opacity: 1; }
+    72% { transform: translate(268px, 120px); opacity: 1; }
+    100% { transform: translate(268px, 198px); opacity: 0; }
+  }
+  @keyframes packetThree {
+    0% { transform: translate(158px, 72px); opacity: 0; }
+    12% { opacity: 1; }
+    48% { transform: translate(158px, 120px); opacity: 1; }
+    76% { transform: translate(102px, 120px); opacity: 1; }
+    100% { transform: translate(102px, 196px); opacity: 0; }
+  }
+  @keyframes packetFour {
+    0% { transform: translate(158px, 72px); opacity: 0; }
+    12% { opacity: 1; }
+    52% { transform: translate(158px, 120px); opacity: 1; }
+    100% { transform: translate(158px, 194px); opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-diagram path.draw { stroke-dashoffset: 0; animation: none; }
+    .hero-diagram circle.pulse { opacity: 1; animation: none; }
+    .hero-diagram .flow-lines path { animation: none; opacity: .25; }
+    .hero-diagram .packet, .hero-diagram .device-light { animation: none; opacity: .65; }
+  }
+
+  /* Services */
+  .services {
+    padding: 88px 0;
+    background: var(--bg-alt);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .service-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+  }
+  .service-card {
+    background: var(--card-bg);
+    padding: 36px 32px;
+    transition: transform .3s ease;
+  }
+  .service-card:hover { transform: translateY(-5px); }
+  .service-card.will-animate {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity .6s ease, transform .6s ease;
+  }
+  .service-card.will-animate.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .service-card, .service-card.will-animate { transition: none; opacity: 1; transform: none; }
+  }
+  .service-card .icon {
+    width: 40px;
+    height: 40px;
+    color: var(--accent);
+    margin-bottom: 22px;
+    transition: transform .3s ease;
+  }
+  .service-card:hover .icon { transform: scale(1.1) rotate(-4deg); }
+  .service-card li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 9px 0;
+    border-top: 1px solid var(--border);
+    font-size: 14.5px;
+    color: var(--text-primary);
+  }
+  .service-card li::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--accent);
+    flex-shrink: 0;
+    transform: translateY(-1px);
+    transition: transform .2s ease;
+  }
+  .service-card:hover li::before { transform: translateY(-1px) scale(1.3); }
+  .service-card h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  .service-card > p {
+    color: var(--text-secondary);
+    font-size: 15px;
+    margin: 0 0 22px;
+    max-width: 42ch;
+  }
+  .service-card ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+  .service-card li:first-of-type { border-top: 1px solid var(--border); }
+
+  @media (max-width: 900px) {
+    .service-grid { grid-template-columns: 1fr 1fr; }
+    .service-card:last-child { grid-column: 1 / -1; }
+  }
+  @media (max-width: 760px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-report { max-width: 100%; justify-self: stretch; }
+    .service-grid { grid-template-columns: 1fr; }
+    .service-card:last-child { grid-column: auto; }
+    .hero { padding: 64px 0 56px; }
+  }
+
+
+  /* Services image carousel */
+  .services-carousel {
+    margin-top: 42px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+  .services-carousel-track {
+    display: flex;
+    width: max-content;
+    animation: servicesCarousel 32s linear infinite;
+  }
+  /* El carrusel sigue en movimiento aunque se toque o se pase el cursor */
+  .services-carousel:hover .services-carousel-track,
+  .services-carousel:active .services-carousel-track,
+  .services-carousel:focus-within .services-carousel-track {
+    animation-play-state: running;
+  }
+  .services-carousel-slide {
+    position: relative;
+    width: min(460px, 78vw);
+    height: 280px;
+    flex: 0 0 auto;
+    overflow: hidden;
+    border-right: 1px solid var(--border);
+    background: var(--bg-alt);
+  }
+  .services-carousel-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .services-carousel-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 28px 22px 18px;
+    color: #fff;
+    background: linear-gradient(transparent, rgba(10,17,40,.88));
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  @keyframes servicesCarousel {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .services-carousel-track { animation: none; }
+  }
+  @media (max-width: 760px) {
+    .services-carousel { margin-top: 30px; }
+    .services-carousel-slide { height: 220px; }
+  }
+
+  /* Products */
+  .products-section {
+    position: relative;
+    overflow: hidden;
+    padding: 88px 0;
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) 8%, transparent) 1px, transparent 1px);
+    background-size: 26px 26px;
+    background-position: -6px -6px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .products-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    gap: 28px;
+    margin-bottom: 38px;
+  }
+  .products-heading h2 { font-size: clamp(26px, 3vw, 36px); }
+  .products-heading p {
+    max-width: 620px;
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+  .products-pill {
+    flex: 0 0 auto;
+    padding: 7px 12px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+    border-radius: 999px;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--card-bg));
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+
+  /* Equipo interactivo */
+  .tm { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 28px; align-items: start; }
+  .tm-list { display: grid; gap: 14px; }
+  .tm-card, .tm-panel {
+    --mx: 50%; --my: 50%;
+    position: relative; overflow: hidden;
+    border: 1px solid var(--border); border-radius: 12px;
+    background: color-mix(in srgb, var(--card-bg) 86%, transparent);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    box-shadow: 0 12px 34px rgba(15, 23, 42, .045);
+  }
+  .tm-card::before, .tm-panel::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s;
+    background: radial-gradient(260px circle at var(--mx) var(--my), color-mix(in srgb, var(--accent) 16%, transparent), transparent 65%);
+  }
+  .tm-card:hover::before, .tm-panel:hover::before { opacity: 1; }
+  .tm-card {
+    display: flex; align-items: center; gap: 14px; width: 100%; padding: 16px;
+    text-align: left; font: inherit; color: var(--text-primary); cursor: pointer;
+    transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+  }
+  .tm-card:hover { transform: translateX(3px); }
+  .tm-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tm-card[aria-selected="true"] {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent), 0 14px 40px -14px color-mix(in srgb, var(--accent) 55%, transparent);
+  }
+  .tm-card img { width: 60px; height: 60px; flex: none; border-radius: 50%; object-fit: cover; object-position: center 20%; border: 2px solid var(--border); position: relative; }
+  .tm-card[aria-selected="true"] img { border-color: var(--accent); }
+  .tm-card-txt { display: flex; flex-direction: column; gap: 3px; min-width: 0; position: relative; flex: 1; }
+  .tm-card-txt strong { font-family: 'Space Grotesk', sans-serif; font-size: 17px; }
+  .tm-card-txt em { font-style: normal; font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--accent); line-height: 1.35; }
+  .tm-chev { flex: none; position: relative; color: var(--text-secondary); transition: transform .25s, color .25s; }
+  .tm-card[aria-selected="true"] .tm-chev { color: var(--accent); transform: translateX(3px); }
+
+  .tm-panel { padding: 28px; animation: fadeUp .45s ease-out both; }
+  .tm-panel > * { position: relative; }
+  .tm-top { display: flex; align-items: center; gap: 20px; }
+  .tm-photo {
+    width: 96px; height: 96px; flex: none; border-radius: 50%; object-fit: cover; object-position: center 20%;
+    padding: 3px; background: conic-gradient(from 200deg, var(--accent), transparent 40%, var(--accent));
+  }
+  .tm-top h3 { font-size: clamp(22px, 2.6vw, 28px); margin: 0 0 6px; }
+  .tm-role { font-size: 12.5px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--accent); }
+  .tm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 24px 0; }
+  .tm-stat {
+    padding: 14px 16px; border: 1px solid var(--border); border-radius: 10px;
+    background: color-mix(in srgb, var(--accent) 5%, transparent);
+    display: flex; flex-direction: column; gap: 4px; min-width: 0;
+  }
+  .tm-stat b { font-family: 'Space Grotesk', sans-serif; font-size: 26px; line-height: 1.15; }
+  .tm-stat b.tm-stat-txt { font-size: 15.5px; line-height: 1.3; padding: 5px 0; }
+  .tm-stat > span { font-size: 12px; color: var(--text-secondary); line-height: 1.4; }
+
+  .tm-tabs { display: flex; gap: 4px; position: relative; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .tm-tab {
+    background: none; border: 0; padding: 10px 16px; font: inherit; font-size: 14px; font-weight: 600;
+    color: var(--text-secondary); cursor: pointer; white-space: nowrap; transition: color .2s;
+  }
+  .tm-tab:hover, .tm-tab[aria-selected="true"] { color: var(--text-primary); }
+  .tm-tab:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; border-radius: 6px; }
+  .tm-ind { position: absolute; bottom: 0; left: 0; height: 2px; width: 0; background: var(--accent); border-radius: 2px; transition: left .3s ease, width .3s ease; }
+  .tm-pane { padding-top: 22px; animation: fadeUp .4s ease-out both; }
+  .tm-pane[hidden] { display: none; }
+  .tm-perfil p { margin: 0 0 14px; font-size: 15px; line-height: 1.7; color: var(--text-secondary); }
+  .tm-perfil p:last-child { margin-bottom: 0; }
+
+  .tm-tl { list-style: none; margin: 0; padding: 0 0 0 26px; position: relative; }
+  .tm-tl::before { content: ""; position: absolute; left: 5px; top: 6px; bottom: 6px; width: 1px; background: linear-gradient(var(--accent), var(--border)); }
+  .tm-tl li { position: relative; padding-bottom: 20px; animation: fadeUp .5s ease-out both; animation-delay: calc(var(--i) * .09s); }
+  .tm-tl li:last-child { padding-bottom: 0; }
+  .tm-tl li::before {
+    content: ""; position: absolute; left: -26px; top: 5px; width: 11px; height: 11px; border-radius: 50%;
+    background: var(--card-bg); border: 2px solid var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
+  }
+  .tm-tl h4 { font-size: 15.5px; margin: 0 0 4px; }
+  .tm-tl p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--text-secondary); }
+
+  .tm-grp { margin-bottom: 18px; }
+  .tm-grp:last-child { margin-bottom: 0; }
+  .tm-grp h4 { font-size: 11.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--text-secondary); margin: 0 0 9px; font-weight: 600; }
+  .tm-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .tm-chip {
+    font-size: 13px; padding: 6px 13px; border-radius: 999px; border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--accent) 6%, transparent); color: var(--text-primary);
+    transition: transform .2s, border-color .2s, background .2s;
+  }
+  .tm-chip:hover { transform: translateY(-2px); border-color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+
+  @media (max-width: 900px) {
+    .tm { grid-template-columns: minmax(0, 1fr); }
+    .tm-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tm-card:hover { transform: none; }
+    .tm-chev { display: none; }
+  }
+  @media (max-width: 560px) {
+    .tm-list { grid-template-columns: minmax(0, 1fr); }
+    .tm-stats { grid-template-columns: minmax(0, 1fr); }
+    .tm-stats { gap: 8px; margin: 18px 0; }
+    .tm-stat { flex-direction: row; align-items: center; gap: 12px; padding: 10px 14px; }
+    .tm-stat b { flex: none; font-size: 22px; }
+    .tm-stat b.tm-stat-txt { font-size: 14px; padding: 0; }
+    .tm-stat > span { flex: 1; text-align: right; }
+    .tm-tabs { gap: 0; }
+    .tm-tab { flex: 1; padding: 11px 4px; font-size: 13px; text-align: center; }
+    .tm-top h3 { font-size: 22px; margin-bottom: 4px; }
+    .tm-role { font-size: 11.5px; line-height: 1.4; display: block; }
+    .tm-panel { padding: 20px; }
+    .tm-top { gap: 14px; } .tm-photo { width: 76px; height: 76px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .tm-panel, .tm-pane, .tm-tl li { animation: none; }
+    .tm-card, .tm-chip, .tm-ind { transition: none; }
+  }
+  .products-section > .wrap { position: relative; z-index: 1; }
+  .products-bg::after {
+    background:
+      linear-gradient(180deg, var(--bg) 0%, color-mix(in srgb, var(--bg) 25%, transparent) 14%, color-mix(in srgb, var(--bg) 25%, transparent) 86%, var(--bg) 100%),
+      linear-gradient(90deg, color-mix(in srgb, var(--bg) 40%, transparent), transparent 50%, color-mix(in srgb, var(--bg) 40%, transparent));
+  }
+  .product-categories {
+    columns: 2;
+    column-gap: 20px;
+  }
+  .product-category.product-category-wide {
+    width: 100%;
+  }
+  .product-category.product-category-wide .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .product-category {
+    display: inline-block;
+    width: 100%;
+    margin: 0 0 20px;
+    padding: 25px;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--card-bg) 86%, transparent);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    box-shadow: 0 12px 34px rgba(15, 23, 42, .045);
+    break-inside: avoid;
+    vertical-align: top;
+  }
+  .product-category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .product-category-icon {
+    display: grid;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 10px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), #62a8ff);
+    box-shadow: 0 7px 18px color-mix(in srgb, var(--accent) 25%, transparent);
+  }
+  .product-category-icon svg { width: 20px; height: 20px; }
+  .product-category h3 { font-size: 18px; }
+  .product-category small { color: var(--text-secondary); font-size: 12px; }
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .product-logo {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    min-height: 64px;
+    padding: 11px 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--bg) 86%, var(--bg-alt));
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .product-logo:hover {
+    transform: translateY(-3px);
+    border-color: color-mix(in srgb, var(--brand, var(--accent)) 55%, var(--border));
+    box-shadow: 0 9px 20px rgba(15, 23, 42, .08);
+  }
+  .product-mark {
+    display: grid;
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    place-items: center;
+    border-radius: 9px;
+    color: #fff;
+    background: var(--brand, var(--accent));
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: -.02em;
+  }
+  .product-logo strong {
+    display: block;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 13.5px;
+    line-height: 1.15;
+  }
+  .product-logo span:last-child {
+    display: block;
+    margin-top: 3px;
+    color: var(--text-secondary);
+    font-size: 10.5px;
+    line-height: 1.2;
+  }
+  @media (max-width: 800px) {
+    .products-heading { align-items: start; flex-direction: column; }
+    .product-categories { columns: 1; }
+    .product-category.product-category-wide .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .projects-heading {
+    margin-top: 56px;
+    padding-top: 44px;
+    border-top: 1px solid var(--border);
+  }
+  .projects-heading h2 { font-size: clamp(24px, 3vw, 32px); }
+  .projects-heading p {
+    max-width: 620px;
+    margin: 10px 0 0;
+    color: var(--text-secondary);
+    font-size: 16px;
+  }
+  .projects-timeline {
+    position: relative;
+    margin-top: 32px;
+    padding-left: 28px;
+    border-left: 2px solid var(--border);
+  }
+  .project-item {
+    position: relative;
+    padding-bottom: 30px;
+  }
+  .project-item:last-child { padding-bottom: 0; }
+  .project-item::before {
+    content: '';
+    position: absolute;
+    left: -34px;
+    top: 4px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 18%, transparent);
+  }
+  .project-date {
+    color: var(--accent);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: .06em;
+    margin-bottom: 6px;
+  }
+  .project-content h3 { font-size: 17px; margin-bottom: 6px; }
+  .project-content p { color: var(--text-secondary); font-size: 14.5px; max-width: 640px; }
+  @media (max-width: 440px) {
+    .product-category { padding: 19px; }
+    .product-grid,
+    .product-category.product-category-wide .product-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Footer */
+  footer {
+    padding: 40px 0;
+  }
+  .footer-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13.5px;
+    color: var(--text-secondary);
+  }
+  .footer-inner a { color: var(--accent); text-decoration: none; }
+
+  /* ===== Ajustes para iPhone y móviles ===== */
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { overflow-x: clip; }
+  :root { padding-top: 0 !important; }
+  header { top: 0 !important; padding-top: env(safe-area-inset-top, 0px); }
+  * { -webkit-tap-highlight-color: transparent; }
+  .sp-tabs { -webkit-backdrop-filter: blur(8px); }
+  .sp-summary, .sp-card { -webkit-backdrop-filter: none; }
+  .header-inner { padding-left: max(28px, env(safe-area-inset-left)); padding-right: max(28px, env(safe-area-inset-right)); }
+  .wrap { padding-left: max(28px, env(safe-area-inset-left)); padding-right: max(28px, env(safe-area-inset-right)); }
+  .ct-field input, .ct-field select, .ct-field textarea { font-size: 16px; }
+  .sp-foot-bar, footer { padding-bottom: max(18px, env(safe-area-inset-bottom)); }
+  a, button, summary, label { touch-action: manipulation; }
+
+  /* En pantallas táctiles no dejamos efectos "pegados" tras tocar */
+  @media (hover: none) {
+    .btn-primary:hover, .btn-ghost:hover, .nav-cta:hover, .sp-card:hover, .sp-inc li:hover, .hero-logo:hover .logo-mark, .hdr-logo:hover svg { transform: none; }
+    .btn-primary:hover::after { left: -60%; }
+    .sp-card nav a:hover { padding-left: 12px; }
+    .sp-inc li:hover { background: none; }
+  }
+
+  @media (max-width: 900px) {
+    .header-inner { padding-left: max(16px, env(safe-area-inset-left)); padding-right: max(16px, env(safe-area-inset-right)); }
+  }
+
+  @media (max-width: 560px) {
+    .wrap { padding-left: max(18px, env(safe-area-inset-left)); padding-right: max(18px, env(safe-area-inset-right)); }
+    body { font-size: 15.5px; }
+
+    /* Portada */
+    .hero { padding: 40px 0 44px; }
+    .hero h1 { font-size: 27px; }
+    .hero p { font-size: 16px; margin: 18px 0 24px; }
+    .cta-row { flex-direction: column; align-items: stretch; }
+    .cta-row a { text-align: center; }
+    .hero-report { max-width: none; justify-self: stretch; }
+    .services-carousel-slide { height: 210px; width: 82vw; }
+    .products-heading h2 { font-size: 25px; }
+
+    /* Páginas de servicio y contacto */
+    .sp-hero { padding-top: 26px; }
+    .sp-crumbs { margin-bottom: 18px; font-size: 12.5px; }
+    .sp-hero h1 { font-size: 29px; line-height: 1.12; }
+    .sp-lead { font-size: 16px; margin: 14px 0 22px; }
+    .sp-actions { flex-direction: column; align-items: stretch; }
+    .sp-actions a { text-align: center; }
+    .btn-primary, .btn-ghost { min-height: 48px; padding-top: 13px; padding-bottom: 13px; }
+    .sp-tags { gap: 8px 14px; font-size: 13.5px; margin-top: 20px; }
+    .sp-facts { margin-top: 26px; }
+    .sp-facts dd { font-size: 14px; }
+    .sp-tabs a { padding: 13px 11px 11px; font-size: 13.5px; }
+    .sp-tabs .wrap { -webkit-overflow-scrolling: touch; }
+    .sp-block { scroll-margin-top: 124px; }
+    .sp-block h2 { font-size: 22px; }
+    .sp-block > p { margin-bottom: 20px; font-size: 15px; }
+    .sp-inc li { padding: 14px 0; }
+    .sp-deliv { padding: 2px 16px; }
+    .sp-deliv li { font-size: 14.5px; padding: 12px 0; }
+    .sp-faq summary { font-size: 15px; padding: 16px 34px 16px 0; }
+    .sp-card { padding: 20px; }
+    .sp-card.cta .btn-primary { min-height: 48px; }
+    .sp-foot { padding-top: 40px; }
+    .sp-foot-grid { gap: 24px; }
+    .sp-foot-bar { margin-top: 28px; }
+
+    /* Contacto */
+    .ct-form { padding: 20px 18px; border-radius: 14px; }
+    .ct-form h2 { font-size: 20px; }
+    .ct-actions { flex-direction: column; align-items: stretch; }
+    .ct-actions button { width: 100%; }
+    .ct-actions small { text-align: center; }
+    .ct-chips label { flex: 1 1 calc(50% - 8px); }
+    .ct-chips span { display: block; text-align: center; padding: 11px 10px; }
+    .ct-done .ct-btns { flex-direction: column; align-items: stretch; }
+    .ct-done .ct-btns > * { text-align: center; }
+    .ct-urgent { font-size: 13.5px; }
+    .ct-layout { padding-bottom: 56px; }
+  }
+  @media (max-width: 380px) {
+    .sp-hero h1 { font-size: 26px; }
+    .hero h1 { font-size: 25px; }
+    .sp-tabs a { padding: 13px 9px 11px; font-size: 13px; }
+  }
+.lang-switch{display:inline-flex;align-items:center;gap:4px;margin-left:10px;font:600 12px/1 Inter,system-ui,sans-serif;letter-spacing:.06em}.lang-switch a{color:#8ea0c4;text-decoration:none;padding:7px 9px;border:1px solid rgba(91,139,255,.3);border-radius:8px;transition:color .2s,border-color .2s}.lang-switch a:hover{color:#fff;border-color:#5b8bff}.lang-switch a[aria-current="true"]{color:#fff;background:rgba(91,139,255,.18);border-color:#5b8bff}</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <nav class="nav-links" id="navLinks" aria-label="Main">
+      <div class="nav-item" id="ia-menu">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="ia-dropdown">
+          Artificial intelligence
+          <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown" id="ia-dropdown" role="menu">
+          <a href="#servicios" role="menuitem">AI risk assessment</a>
+          <a href="#servicios" role="menuitem">AI blue team</a>
+          <a href="#marcos" role="menuitem">AI regulatory frameworks</a>
+          <a href="#proceso" role="menuitem">How we work</a>
+        </div>
+      </div>
+      <div class="nav-item" id="cybersecurity-menu">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="cybersecurity-dropdown">
+          Technical audits
+          <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown" id="cybersecurity-dropdown" role="menu">
+          <a href="../pentesting.html" role="menuitem">Best-practice review</a>
+          <a href="../analisis-vulnerabilidades.html" role="menuitem">Vulnerability analysis</a>
+          <a href="../auditoria-aplicaciones-web.html" role="menuitem">Web application audit</a>
+          <a href="../auditoria-redes-fw-wifi.html" role="menuitem">Local network, firewall and Wi-Fi audit</a>
+          <a href="../auditoria-codigo-fuente.html" role="menuitem">Source code audit</a>
+          <a href="../hardening-sistemas.html" role="menuitem">Systems hardening</a>
+          <a href="../ingenieria-social-phishing.html" role="menuitem">Social engineering and phishing</a>
+        </div>
+      </div>
+      <div class="nav-item" id="compliance-menu">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="compliance-dropdown">
+          Regulatory compliance
+          <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown" id="compliance-dropdown" role="menu">
+          <a href="../certificacion-iso-27001.html" role="menuitem">ISO 27001 certification</a>
+          <a href="../adecuacion-nis2.html" role="menuitem">NIS2 compliance</a>
+          <a href="../ens-adecuacion.html" role="menuitem">ENS and systems compliance</a>
+          <a href="../rgpd-proteccion-datos.html" role="menuitem">GDPR and data protection</a>
+          <a href="../preparacion-certificaciones.html" role="menuitem">Certification preparation</a>
+        </div>
+      </div>
+      <div class="nav-item" id="risk-menu">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="risk-dropdown">
+          Risk and response
+          <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown" id="risk-dropdown" role="menu">
+          <a href="../analisis-gestion-riesgos.html" role="menuitem">Risk analysis and management</a>
+          <a href="../planes-contingencia-bcp-drp.html" role="menuitem">Contingency plans (BCP/DRP)</a>
+          <a href="../respuesta-incidentes.html" role="menuitem">Incident response</a>
+          <a href="../analisis-forense.html" role="menuitem">Digital forensics</a>
+        </div>
+      </div>
+      <div class="nav-item" id="development-menu">
+        <button class="nav-dropdown-toggle" type="button" aria-expanded="false" aria-controls="development-dropdown">
+          Training and awareness
+          <svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="nav-dropdown" id="development-dropdown" role="menu">
+          <a href="../formacion-ciberseguridad.html" role="menuitem">Cybersecurity training</a>
+          <a href="../simulacros-phishing.html" role="menuitem">Phishing simulations</a>
+          <a href="../concienciacion-direccion.html" role="menuitem">Management awareness</a>
+          <a href="../buenas-practicas-empleados.html" role="menuitem">Best practices for employees</a>
+        </div>
+      </div>
+    </nav>
+    <a class="nav-cta" href="../contacto.html">Contact</a><nav class="lang-switch" aria-label="Language"><a href="../index.html" lang="es" aria-current="false">ES</a><a href="index.html" lang="en" aria-current="true">EN</a></nav>
+    <button class="nav-burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="navLinks"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-bg" id="heroBg" aria-hidden="true">
+    <canvas id="heroCanvas"></canvas>
+    <video id="heroVideo" autoplay muted loop playsinline preload="auto">
+      <source src="video/cyber-bg.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="wrap hero-grid">
+    <div>
+      <a class="logo hero-logo" href="#top" aria-label="desedit">
+        <svg class="logo-mark" viewBox="0 0 48 48" aria-hidden="true"><defs><clipPath id="lc1"><rect width="48" height="48" rx="12"/></clipPath></defs><image href="../img/desedit-logo.jpg" xlink:href="../img/desedit-logo.jpg" x="0" y="0" width="48" height="48" preserveAspectRatio="xMidYMid slice" clip-path="url(#lc1)"/></svg>
+        <span class="logo-word">desed<b>it</b></span>
+      </a>
+      <h1>We help you prepare for cybersecurity and compliance, including AI</h1>
+      <p>We do not certify: we help you prepare the audit and certification for ISO 27001, ISO 42001, NIS2, ENS and the AI Act. We review your systems, including AI systems, against best practices and reference frameworks, before an attacker does.</p>
+      <div class="cta-row">
+        <a class="btn-primary" href="../contacto.html">Talk to us and request a quote</a>
+      </div>
+      <div class="hero-highlights" aria-label="Advantages of working with desedit">
+        <div class="hero-highlight">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3l7 3v5c0 4.5-3 7.5-7 10-4-2.5-7-5.5-7-10V6l7-3z"/><path d="M9 12l2 2 4-4"/>
+          </svg>
+          <div><strong>ISO 27001, NIS2 and AI Act</strong><span>Real regulatory compliance</span></div>
+        </div>
+        <div class="hero-highlight">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>
+          </svg>
+          <div><strong>Infrastructure analysis</strong><span>Blue team: detect before an attacker does</span></div>
+        </div>
+        <div class="hero-highlight">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M4 16l5-5 4 4 7-8"/><path d="M15 7h5v5"/>
+          </svg>
+          <div><strong>Actionable reports</strong><span>Prioritized by real risk</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-report run" role="img" aria-label="Example audit report showing risk level, prioritized findings and compliance progress">
+      <div class="rp-head">
+        <span class="rp-title">Audit report</span>
+        <span class="rp-tag">Confidential</span>
+      </div>
+      <div class="rp-score">
+        <svg viewBox="0 0 80 80" aria-hidden="true">
+          <circle cx="40" cy="40" r="34" class="rp-track"/>
+          <circle cx="40" cy="40" r="34" class="rp-arc" pathLength="100"/>
+        </svg>
+        <div class="rp-score-num"><strong>72</strong><span>/100</span></div>
+        <div class="rp-score-txt"><b>Risk level: medium</b><span>12 prioritized actions</span></div>
+      </div>
+      <ul class="rp-list">
+        <li><i class="sev s-crit">High risk</i><span>HR chatbot processing personal data without a DPIA</span></li>
+        <li><i class="sev s-high">Shadow AI</i><span>Unapproved AI tools in use</span></li>
+        <li><i class="sev s-med">No oversight</i><span>Automated processes without human oversight</span></li>
+        <li><i class="sev s-low">Limited</i><span>AI usage policy pending</span></li>
+      </ul>
+      <div class="rp-comp">
+        <div><label>ISO 27001</label><div class="rp-bar"><em style="--w:41%"></em></div><b>41%</b></div>
+        <div><label>NIS2</label><div class="rp-bar"><em style="--w:58%"></em></div><b>58%</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes svcDotDrift {
+    from { background-position: 0 0; }
+    to { background-position: 26px 26px; }
+  }
+  @keyframes svcGlowFloat {
+    0% { transform: translate(-6%, -4%) scale(1); opacity: .75; }
+    50% { transform: translate(6%, 5%) scale(1.12); opacity: 1; }
+    100% { transform: translate(-6%, -4%) scale(1); opacity: .75; }
+  }
+  @keyframes svcScan {
+    0% { transform: translateY(-100%); opacity: 0; }
+    15% { opacity: .9; }
+    85% { opacity: .9; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+  #servicios { position: relative; overflow: hidden; background-color: var(--bg); background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) 9%, transparent) 1px, transparent 1px); background-size: 26px 26px; animation: svcDotDrift 18s linear infinite; }
+  #servicios > .wrap { position: relative; z-index: 1; }
+  #servicios .svc-glow { position: absolute; width: 520px; height: 520px; top: -160px; right: -120px; border-radius: 50%; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 45%, transparent), transparent 65%); filter: blur(10px); z-index: 0; pointer-events: none; animation: svcGlowFloat 11s ease-in-out infinite; }
+  #servicios .svc-glow.b { top: auto; bottom: -200px; right: auto; left: -160px; width: 440px; height: 440px; background: radial-gradient(circle, color-mix(in srgb, #22d3ee 30%, transparent), transparent 65%); animation-duration: 15s; animation-direction: reverse; }
+  #servicios .svc-scan { position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--accent), transparent); z-index: 0; pointer-events: none; animation: svcScan 9s linear infinite; }
+  @media (prefers-reduced-motion: reduce) {
+    #servicios, #servicios .svc-glow, #servicios .svc-scan { animation: none; }
+  }
+</style>
+<section class="services" id="servicios">
+  <div class="svc-glow" aria-hidden="true"></div>
+  <div class="svc-glow b" aria-hidden="true"></div>
+  <div class="svc-scan" aria-hidden="true"></div>
+  <div class="wrap">
+    <div class="products-heading" style="margin-bottom: 8px;">
+      <div>
+        <h2>AI services</h2>
+        <p>Adopt AI without fear of fines, data leaks or attacks.</p>
+      </div>
+      <span class="products-pill">AI</span>
+    </div>
+    <div class="services-carousel" aria-label="Images of our services">
+      <div class="services-carousel-track">
+        <div class="services-carousel-slide">
+          <img src="../img/red-team-ia.svg" alt="Screens showing code and security analysis" loading="lazy">
+          <div class="services-carousel-caption">AI blue team</div>
+        </div>
+        <div class="services-carousel-slide">
+          <img src="../img/analisis-vulnerabilidades.svg" alt="Vulnerability analysis of systems" loading="lazy">
+          <div class="services-carousel-caption">Vulnerability analysis</div>
+        </div>
+        <div class="services-carousel-slide">
+          <img src="../img/monitorizacion.svg" alt="Security operations room and monitoring" loading="lazy">
+          <div class="services-carousel-caption">Monitoring and response</div>
+        </div>
+        <div class="services-carousel-slide">
+          <img src="../img/iso-nis2.svg" alt="Documentation and regulatory compliance" loading="lazy">
+          <div class="services-carousel-caption">ISO 27001 and NIS2</div>
+        </div>
+        <div class="services-carousel-slide">
+          <img src="../img/rag-agentes.svg" alt="Team analyzing security data" loading="lazy">
+          <div class="services-carousel-caption">RAG and agent security</div>
+        </div>
+
+        <!-- Duplicado para crear un carrusel continuo -->
+        <div class="services-carousel-slide" aria-hidden="true">
+          <img src="../img/red-team-ia.svg" alt="" loading="lazy">
+          <div class="services-carousel-caption">AI blue team</div>
+        </div>
+        <div class="services-carousel-slide" aria-hidden="true">
+          <img src="../img/analisis-vulnerabilidades.svg" alt="" loading="lazy">
+          <div class="services-carousel-caption">Vulnerability analysis</div>
+        </div>
+        <div class="services-carousel-slide" aria-hidden="true">
+          <img src="../img/monitorizacion.svg" alt="" loading="lazy">
+          <div class="services-carousel-caption">Monitoring and response</div>
+        </div>
+        <div class="services-carousel-slide" aria-hidden="true">
+          <img src="../img/iso-nis2.svg" alt="" loading="lazy">
+          <div class="services-carousel-caption">ISO 27001 and NIS2</div>
+        </div>
+        <div class="services-carousel-slide" aria-hidden="true">
+          <img src="../img/rag-agentes.svg" alt="" loading="lazy">
+          <div class="services-carousel-caption">RAG and agent security</div>
+        </div>
+      </div>
+
+
+    <div class="service-grid">
+
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="6" rx="1"/>
+          <rect x="3" y="14" width="18" height="6" rx="1"/>
+          <circle cx="7" cy="7" r="0.6" fill="currentColor" stroke="none"/>
+          <circle cx="7" cy="17" r="0.6" fill="currentColor" stroke="none"/>
+          <path d="M12 10v4"/>
+        </svg>
+        <h3>Initial AI risk assessment</h3>
+        <p>Inventory of the AI in use, including shadow AI, classified under the AI Act, with a gap analysis against ISO 42001 and NIST AI RMF.</p>
+        <ul>
+          <li>Systems and shadow AI inventory</li>
+          <li>AI Act classification (prohibited, high, limited, minimal)</li>
+          <li>ISO 42001 / NIST AI RMF gap analysis</li>
+          <li>Prioritized roadmap</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l7 3v5c0 4.5-3 7.5-7 10-4-2.5-7-5.5-7-10V6l7-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <h3>Regulatory preparation</h3>
+        <p>Policies, records, impact assessments and technical documentation to comply with the AI Act and the GDPR. For ISO 42001 certification, full preparation up to the audit.</p>
+        <ul>
+          <li>AI usage policies</li>
+          <li>DPIA and FRIA</li>
+          <li>AI Act technical documentation</li>
+          <li>Human oversight and incident management</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 3 6v6c0 5.2 3.6 9.4 9 10 5.4-.6 9-4.8 9-10V6l-9-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <h3>Security review of implementations</h3>
+        <p>We review the architecture of RAG systems, agents and chatbots before production, referencing the OWASP Top 10 for LLM and MITRE ATLAS.</p>
+        <ul>
+          <li>Access control and data isolation</li>
+          <li>Secrets and API key management</li>
+          <li>Logging and monitoring</li>
+          <li>Support for secure deployment</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 3 6v6c0 5.2 3.6 9.4 9 10 5.4-.6 9-4.8 9-10V6l-9-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <h3>AI blue team</h3>
+        <p>Monitoring and detection of attacks against AI systems: prompt injection, agent abuse and data leakage, with incident response and an improvement plan.</p>
+        <ul>
+          <li>Prompt injection detection</li>
+          <li>Monitoring of agent logs and traces</li>
+          <li>AI incident response</li>
+          <li>Hardening of integrations</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="6" rx="1"/>
+          <rect x="3" y="14" width="18" height="6" rx="1"/>
+          <path d="M12 10v4"/>
+        </svg>
+        <h3>Support for secure deployment</h3>
+        <p>Your team or agency implements; we design the architecture and approve the move to production.</p>
+        <ul>
+          <li>Secure architecture design</li>
+          <li>Pre-production review</li>
+          <li>Sign-off per deliverable</li>
+        </ul>
+      </div>
+
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 12a9 9 0 1 0 3-6.7"/>
+          <path d="M3 4v4h4"/>
+          <path d="M12 7v5l3 2"/>
+        </svg>
+        <h3>Continuous monitoring and compliance</h3>
+        <p>Tracking regulatory changes, updating policies and responding to customer and auditor questionnaires.</p>
+        <ul>
+          <li>Quarterly review</li>
+          <li>Tracking the AI Act and standards</li>
+          <li>Regular training</li>
+          <li>Monthly fee</li>
+        </ul>
+      </div>
+
+    </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  #ciberseguridad .service-card,
+  #marcos .service-card {
+    transition: opacity .4s ease-out, transform .4s ease-out, box-shadow .3s ease;
+    transition-delay: 0s !important;
+  }
+  #ciberseguridad .service-card.will-animate,
+  #marcos .service-card.will-animate {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  #ciberseguridad .service-card.will-animate.in-view,
+  #marcos .service-card.will-animate.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #ciberseguridad .service-card.in-view:hover,
+  #marcos .service-card.in-view:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 18px 40px rgba(37, 84, 232, .18);
+    transition-delay: 0s;
+  }
+  #ciberseguridad .service-card .icon,
+  #marcos .service-card .icon {
+    transition: transform .8s cubic-bezier(.22,.61,.36,1);
+  }
+  #ciberseguridad .service-card li,
+  #marcos .service-card li {
+    transition: transform .4s ease, color .3s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #ciberseguridad .service-card, #ciberseguridad .service-card.will-animate,
+    #marcos .service-card, #marcos .service-card.will-animate {
+      transition: none; opacity: 1; transform: none; filter: none;
+    }
+  }
+</style>
+<section id="ciberseguridad" style="padding: 72px 0; background-color: var(--bg); background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) 9%, transparent) 1px, transparent 1px); background-size: 26px 26px;">
+  <div class="wrap">
+    <div class="products-heading">
+      <div>
+        <h2>Cybersecurity and compliance</h2>
+        <p>Technical audits, regulatory compliance and risk management for your entire infrastructure.</p>
+      </div>
+      <span class="products-pill">Cybersecurity</span>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="4" width="18" height="6" rx="1"/>
+          <rect x="3" y="14" width="18" height="6" rx="1"/>
+          <circle cx="7" cy="7" r="0.6" fill="currentColor" stroke="none"/>
+          <circle cx="7" cy="17" r="0.6" fill="currentColor" stroke="none"/>
+          <path d="M12 10v4"/>
+        </svg>
+        <h3>Technical infrastructure analysis</h3>
+        <p>We review your infrastructure end to end: systems, applications and networks, measured against best practices and reference frameworks. We deliver a prioritized plan to fix what we find.</p>
+        <ul>
+          <li>Configuration and access review against best practices</li>
+          <li>Vulnerability analysis</li>
+          <li>Website audits</li>
+          <li>Local network, firewall and Wi-Fi audit</li>
+          <li>Phishing campaigns</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3l7 3v5c0 4.5-3 7.5-7 10-4-2.5-7-5.5-7-10V6l7-3z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <h3>Regulatory compliance</h3>
+        <p>We help you prepare for compliance and certification, with the documentation and evidence each standard requires. We prepare; certification is issued by an accredited body.</p>
+        <ul>
+          <li>ISO 27001 certification preparation</li>
+          <li>NIS2 directive compliance</li>
+          <li>National Security Scheme (ENS)</li>
+          <li>GDPR and data protection</li>
+          <li>Periodic compliance audits</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2 3 6v6c0 5.2 3.6 9.4 9 10 5.4-.6 9-4.8 9-10V6l-9-4z"/>
+          <path d="M9 12l2 2 4-4"/>
+        </svg>
+        <h3>Risk management and response</h3>
+        <p>We analyze the real risk to your business and prepare the plans to react quickly when something fails.</p>
+        <ul>
+          <li>Risk analysis and management</li>
+          <li>Contingency and continuity plans (BCP/DRP)</li>
+          <li>Incident response</li>
+          <li>Team training and awareness</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="marcos" style="padding: 72px 0; background-color: var(--bg); background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) 9%, transparent) 1px, transparent 1px); background-size: 26px 26px;">
+  <div class="wrap">
+    <div class="products-heading">
+      <div>
+        <h2>Regulatory and reference frameworks</h2>
+        <p>We work with the regulations and standards that apply to your case, and cite them in every deliverable.</p>
+      </div>
+      <span class="products-pill">References</span>
+    </div>
+    <div class="service-grid">
+      <div class="service-card">
+        <h3>Regulations</h3>
+        <p>Obligations depending on your role: provider or deployer.</p>
+        <ul>
+          <li>AI Act (2025–2027 timeline)</li>
+          <li>RGPD</li>
+          <li>NIS2</li>
+          <li>DORA (financial sector)</li>
+          <li>National Security Scheme (ENS)</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <h3>Management standards</h3>
+        <p>Management systems and risk frameworks.</p>
+        <ul>
+          <li>ISO/IEC 42001</li>
+          <li>ISO/IEC 27001</li>
+          <li>ISO/IEC 23894</li>
+          <li>NIST AI RMF</li>
+        </ul>
+      </div>
+      <div class="service-card">
+        <h3>Technical security</h3>
+        <p>Guidance for evaluating and testing systems.</p>
+        <ul>
+          <li>OWASP Top 10 for LLM Applications</li>
+          <li>OWASP AI Exchange</li>
+          <li>MITRE ATLAS</li>
+          <li>ENISA guidance</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  #proceso .service-card {
+    transition: opacity .4s ease-out, transform .4s ease-out, box-shadow .3s ease;
+    transition-delay: 0s !important;
+  }
+  #proceso .service-card.will-animate { opacity: 0; transform: translateY(20px); }
+  #proceso .service-card.will-animate.in-view { opacity: 1; transform: translateY(0); }
+  #proceso .service-card.in-view:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(37, 84, 232, .18); }
+  @media (prefers-reduced-motion: reduce) {
+    #proceso .service-card, #proceso .service-card.will-animate { transition: none; opacity: 1; transform: none; }
+  }
+</style>
+<section id="proceso" style="padding: 72px 0; background-color: var(--bg); background-image: radial-gradient(circle, color-mix(in srgb, var(--text-primary) 9%, transparent) 1px, transparent 1px); background-size: 26px 26px;">
+  <div class="wrap">
+    <div class="products-heading">
+      <div>
+        <h2>How we work</h2>
+        <p>From first contact to the monthly fee, with signed deliverables at every phase.</p>
+      </div>
+      <span class="products-pill">Process</span>
+    </div>
+    <div class="service-grid">
+      <div class="service-card"><h3>1. Discovery</h3><p>Which AI you use, what data it touches and which regulations apply.</p></div>
+      <div class="service-card"><h3>2. Initial assessment</h3><p>Executive report for management and technical report for IT.</p></div>
+      <div class="service-card"><h3>3. Roadmap</h3><p>Services prioritized by risk and legal deadline.</p></div>
+      <div class="service-card"><h3>4. Sprint-based delivery</h3><p>Deliverables signed off by the client.</p></div>
+      <div class="service-card"><h3>5. Continuous compliance</h3><p>Quarterly review, policy updates and monthly fee.</p></div>
+      <div class="service-card"><h3>6. Audit preparation</h3><p>We support you up to the audit. Certification is issued by an accredited body.</p></div>
+    </div>
+    <p style="margin-top: 32px; color: var(--text-secondary); font-size: 15px;">We prepare and recommend; the compliance decision and sign-off always rest with the client. The scope of each project is defined in the contract.</p>
+  </div>
+</section>
+
+<section id="productos" class="products-section">
+  <div class="hero-bg products-bg" aria-hidden="true"><canvas id="productsCanvas"></canvas></div>
+  <div class="wrap">
+    <div class="products-heading">
+      <div>
+        <h2>Tools and technologies</h2>
+        <p>We work with a proven set of analysis and monitoring tools, together with the reference regulatory frameworks, to deliver rigorous, verifiable audits.</p>
+      </div>
+      <span class="products-pill">Audit stack</span>
+    </div>
+
+    <div class="product-categories">
+      <article class="product-category">
+        <div class="product-category-header">
+          <span class="product-category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg></span>
+          <div><h3>Vulnerability analysis</h3><small>Detection and prioritization of weaknesses</small></div>
+        </div>
+        <div class="product-grid">
+          <div class="product-logo" style="--brand:#65b32e"><span class="product-mark">OV</span><div><strong>OpenVAS</strong><span>Open-source scanning</span></div></div>
+          <div class="product-logo" style="--brand:#ef4b4c"><span class="product-mark">QL</span><div><strong>Qualys</strong><span>Vulnerability management</span></div></div>
+          <div class="product-logo" style="--brand:#049fd9"><span class="product-mark">NM</span><div><strong>Nmap</strong><span>Network discovery</span></div></div>
+        </div>
+      </article>
+
+      
+
+      <article class="product-category">
+        <div class="product-category-header">
+          <span class="product-category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 8h16M7 4v4m10-4v4M5 12h4v4H5zm10 0h4v4h-4zM12 8v12"/></svg></span>
+          <div><h3>SIEM and monitoring</h3><small>Continuous detection and response</small></div>
+        </div>
+        <div class="product-grid">
+          <div class="product-logo" style="--brand:#00a9e0"><span class="product-mark">WZ</span><div><strong>Wazuh</strong><span>Open SIEM and XDR</span></div></div>
+          <div class="product-logo" style="--brand:#ef4b4c"><span class="product-mark">SC</span><div><strong>Suricata</strong><span>IDS, IPS and network analysis</span></div></div>
+          <div class="product-logo" style="--brand:#ee3124"><span class="product-mark">FT</span><div><strong>Fortinet</strong><span>Perimeter security</span></div></div>
+          <div class="product-logo" style="--brand:#005571"><span class="product-mark">EL</span><div><strong>Elastic</strong><span>Log analysis</span></div></div>
+        </div>
+      </article>
+
+      <article class="product-category product-category-wide">
+        <div class="product-category-header">
+          <span class="product-category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2 3 6v6c0 5.2 3.6 9.4 9 10 5.4-.6 9-4.8 9-10V6l-9-4z"/><path d="M9 12l2 2 4-4"/></svg></span>
+          <div><h3>Regulatory frameworks and compliance</h3><small>Audit standards and references</small></div>
+        </div>
+        <div class="product-grid">
+          <div class="product-logo" style="--brand:#2554e8"><span class="product-mark">ISO</span><div><strong>ISO 27001</strong><span>Information security management system</span></div></div>
+          <div class="product-logo" style="--brand:#173aad"><span class="product-mark">N2</span><div><strong>NIS2</strong><span>EU cybersecurity directive</span></div></div>
+          <div class="product-logo" style="--brand:#607078"><span class="product-mark">ENS</span><div><strong>ENS</strong><span>National Security Scheme</span></div></div>
+          <div class="product-logo" style="--brand:#0e8ee9"><span class="product-mark">RGPD</span><div><strong>RGPD</strong><span>Data protection</span></div></div>
+        </div>
+      </article>
+
+      <article class="product-category">
+        <div class="product-category-header">
+          <span class="product-category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a9 9 0 1 0 8.5 6"/><path d="M21 3v6h-6"/><path d="M8 11h8v6H8z"/><path d="M10 11V9a2 2 0 0 1 4 0v2"/></svg></span>
+          <div><h3>Backup and continuity</h3><small>Recovery from incidents</small></div>
+        </div>
+        <div class="product-grid">
+          <div class="product-logo" style="--brand:#00b336"><span class="product-mark">VB</span><div><strong>Veeam</strong><span>Backup, replication and recovery</span></div></div>
+          <div class="product-logo" style="--brand:#f4a300"><span class="product-mark">HS</span><div><strong>Hornetsecurity</strong><span>Backup and security for Microsoft 365</span></div></div>
+          <div class="product-logo" style="--brand:#00a8e1"><span class="product-mark">WA</span><div><strong>Wasabi</strong><span>Cloud storage for backups</span></div></div>
+        </div>
+      </article>
+
+      <article class="product-category">
+        <div class="product-category-header">
+          <span class="product-category-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v6c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12v6c0 1.7 3.1 3 7 3s7-1.3 7-3v-6"/></svg></span>
+          <div><h3>Digital forensics</h3><small>Investigation after an incident</small></div>
+        </div>
+        <div class="product-grid">
+          <div class="product-logo" style="--brand:#4479a1"><span class="product-mark">AI</span><div><strong>Autopsy</strong><span>Digital forensics</span></div></div>
+          <div class="product-logo" style="--brand:#c0765a"><span class="product-mark">VOL</span><div><strong>Volatility</strong><span>Memory forensics</span></div></div>
+        </div>
+      </article>
+    </div>
+
+  </div>
+</section>
+
+<section id="sobre-nosotros" style="padding: 72px 0;">
+  <div class="wrap" style="max-width: 720px;">
+    <h2 style="font-size: 26px; margin-bottom: 16px;">About us</h2>
+    <p style="color: var(--text-secondary); font-size: 16px;">At desedit we audit your company's cybersecurity and support you in complying with ISO 27001, NIS2, the ENS and the AI Act, including for your AI systems. We work as an extension of your team, with a clear point of contact and without depending on internal profiles for each project.</p>
+  </div>
+</section>
+
+
+
+<footer id="contacto">
+  <div class="wrap footer-inner">
+    <span>desedit — Cybersecurity and compliance, including AI</span>
+    <a href="mailto:info@desedit.com">info@desedit.com</a>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var menus = Array.prototype.slice.call(document.querySelectorAll('.nav-item'));
+    if (!menus.length) return;
+
+    function setOpen(menu, open) {
+      var toggle = menu.querySelector('.nav-dropdown-toggle');
+      menu.classList.toggle('open', open);
+      if (toggle) toggle.setAttribute('aria-expanded', String(open));
+    }
+
+    function closeOthers(current) {
+      menus.forEach(function (menu) {
+        if (menu !== current) setOpen(menu, false);
+      });
+    }
+
+    menus.forEach(function (menu) {
+      var toggle = menu.querySelector('.nav-dropdown-toggle');
+      var dropdown = menu.querySelector('.nav-dropdown');
+      if (!toggle || !dropdown) return;
+
+      toggle.addEventListener('click', function (event) {
+        event.stopPropagation();
+        var open = !menu.classList.contains('open');
+        closeOthers(menu);
+        setOpen(menu, open);
+      });
+
+      dropdown.addEventListener('click', function (event) {
+        if (event.target.closest('a')) setOpen(menu, false);
+      });
+    });
+
+    document.addEventListener('click', function (event) {
+      menus.forEach(function (menu) {
+        if (!menu.contains(event.target)) setOpen(menu, false);
+      });
+    });
+
+    document.addEventListener('keydown', function (event) {
+      if (event.key !== 'Escape') return;
+      menus.forEach(function (menu) {
+        if (menu.classList.contains('open')) {
+          setOpen(menu, false);
+          var toggle = menu.querySelector('.nav-dropdown-toggle');
+          if (toggle) toggle.focus();
+        }
+      });
+    });
+  })();
+</script>
+<script>
+  (function () {
+    var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var cards = document.querySelectorAll('.service-card');
+    if (reduceMotion || !('IntersectionObserver' in window)) return;
+
+    cards.forEach(function (card, i) {
+      card.classList.add('will-animate');
+      card.style.transitionDelay = (i * 0.1) + 's';
+    });
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+
+    cards.forEach(function (card) { observer.observe(card); });
+  })();
+</script>
+
+<script>
+function initNet(hero, bg, cv, video, maxNodes) {
+  var ctx = cv.getContext('2d');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var running = true, visible = true, frame = 0, t0 = performance.now();
+  var W = 0, H = 0, nodes = [], edges = [], packets = [], rings = [], cols = [];
+  var mouse = { x: -999, y: -999 };
+  var dark = true, ACC = '91,139,255';
+  var OK = '52,211,153', BAD = '255,93,93';
+
+  if (video) {
+    video.addEventListener('canplay', function () {
+      if (reduce) video.pause();
+      bg.classList.add('has-video'); running = false;
+    });
+  }
+
+  function theme() {
+    var v = getComputedStyle(document.documentElement).getPropertyValue('--bg').trim().toLowerCase();
+    dark = (v !== '#ffffff' && v !== '#fff');
+    ACC = dark ? '91,139,255' : '37,84,232';
+  }
+  function rnd(a, b) { return a + Math.random() * (b - a); }
+  function ip() { return '10.0.' + Math.floor(rnd(0, 32)) + '.' + Math.floor(rnd(2, 250)); }
+
+  function build() {
+    var r = cv.getBoundingClientRect(), d = Math.min(window.devicePixelRatio || 1, 2);
+    W = r.width; H = r.height; cv.width = W * d; cv.height = H * d;
+    ctx.setTransform(d, 0, 0, d, 0, 0);
+
+    var n = Math.max(28, Math.min(maxNodes || 120, Math.round(W * H / 11000)));
+    nodes = [];
+    for (var i = 0; i < n; i++) {
+      var q = Math.random(), type = q < .10 ? 'server' : q < .18 ? 'shield' : 'device';
+      nodes.push({
+        hx: rnd(10, W - 10), hy: rnd(10, H - 10), x: 0, y: 0,
+        ax: rnd(.2, .6), ay: rnd(.2, .6), ph: rnd(0, 6.28), amp: rnd(3, 9),
+        type: type, vuln: Math.random() < .10, flash: 0, label: ip(),
+        showLabel: type !== 'device' || Math.random() < .12, timer: rnd(6, 20)
+      });
+    }
+    edges = [];
+    var seen = {};
+    for (i = 0; i < n; i++) {
+      var ds = [];
+      for (var j = 0; j < n; j++) if (j !== i) {
+        var dx = nodes[i].hx - nodes[j].hx, dy = nodes[i].hy - nodes[j].hy;
+        ds.push({ j: j, d: dx * dx + dy * dy });
+      }
+      ds.sort(function (a, b) { return a.d - b.d; });
+      var k = nodes[i].type === 'device' ? 2 : 4;
+      for (var m = 0; m < k; m++) {
+        var o = ds[m]; if (!o || o.d > 190 * 190) continue;
+        var key = Math.min(i, o.j) + '-' + Math.max(i, o.j);
+        if (!seen[key]) { seen[key] = 1; edges.push([i, o.j]); }
+      }
+    }
+    packets = [];
+    var np = Math.min(40, Math.round(edges.length / 3));
+    for (i = 0; i < np; i++) packets.push({ e: Math.floor(Math.random() * edges.length), t: Math.random(), sp: rnd(.004, .012), dir: Math.random() < .5 ? 1 : -1 });
+
+    cols = [];
+    for (var x = 8; x < W; x += 30) cols.push({ x: x, y: rnd(-H, H), sp: rnd(.4, 1.3), len: Math.floor(rnd(5, 11)) });
+  }
+
+  function pos(time) {
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.x = n.hx + Math.sin(time * n.ax + n.ph) * n.amp;
+      n.y = n.hy + Math.cos(time * n.ay + n.ph) * n.amp;
+    }
+  }
+
+  function hex(x, y, r) {
+    ctx.beginPath();
+    for (var i = 0; i < 6; i++) {
+      var a = Math.PI / 3 * i + Math.PI / 6;
+      ctx[i ? 'lineTo' : 'moveTo'](x + Math.cos(a) * r, y + Math.sin(a) * r);
+    }
+    ctx.closePath();
+  }
+
+  function draw(now) {
+    var time = reduce ? 4 : (now - t0) / 1000;
+    if (frame++ % 45 === 0) theme();
+    ctx.clearRect(0, 0, W, H);
+    pos(time);
+
+    /* lluvia hexadecimal muy tenue */
+    ctx.font = '11px "Courier New", monospace';
+    ctx.textBaseline = 'top';
+    var chars = '01ABCDEF';
+    for (var c = 0; c < cols.length; c++) {
+      var col = cols[c];
+      if (!reduce) { col.y += col.sp; if (col.y - col.len * 13 > H) { col.y = -20; col.sp = rnd(.4, 1.3); } }
+      for (var k = 0; k < col.len; k++) {
+        var a = (1 - k / col.len) * (dark ? .16 : .10);
+        ctx.fillStyle = 'rgba(' + ACC + ',' + a + ')';
+        ctx.fillText(chars[(c * 7 + k * 3 + Math.floor(col.y / 13)) % chars.length], col.x, col.y - k * 13);
+      }
+    }
+
+    /* enlaces */
+    ctx.lineWidth = 1;
+    for (var e = 0; e < edges.length; e++) {
+      var A = nodes[edges[e][0]], B = nodes[edges[e][1]];
+      ctx.strokeStyle = 'rgba(' + ACC + ',' + (dark ? .30 : .26) + ')';
+      ctx.beginPath(); ctx.moveTo(A.x, A.y); ctx.lineTo(B.x, B.y); ctx.stroke();
+    }
+
+    /* paquetes de datos con estela */
+    for (var p = 0; p < packets.length; p++) {
+      var pk = packets[p], ed = edges[pk.e]; if (!ed) continue;
+      if (!reduce) pk.t += pk.sp;
+      if (pk.t > 1) { pk.t = 0; pk.e = Math.floor(Math.random() * edges.length); pk.dir = Math.random() < .5 ? 1 : -1; continue; }
+      var P = nodes[ed[pk.dir > 0 ? 0 : 1]], Q = nodes[ed[pk.dir > 0 ? 1 : 0]];
+      var px = P.x + (Q.x - P.x) * pk.t, py = P.y + (Q.y - P.y) * pk.t;
+      var t2 = Math.max(0, pk.t - .12), tx = P.x + (Q.x - P.x) * t2, ty = P.y + (Q.y - P.y) * t2;
+      var lg = ctx.createLinearGradient(tx, ty, px, py);
+      lg.addColorStop(0, 'rgba(' + ACC + ',0)'); lg.addColorStop(1, 'rgba(' + ACC + ',.95)');
+      ctx.strokeStyle = lg; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(px, py); ctx.stroke();
+      ctx.fillStyle = dark ? '#cfe0ff' : '#173aad'; ctx.beginPath(); ctx.arc(px, py, 2, 0, 6.283); ctx.fill();
+    }
+
+    /* enlaces al cursor */
+    if (mouse.x > -500) {
+      for (var i = 0; i < nodes.length; i++) {
+        var dx = nodes[i].x - mouse.x, dy = nodes[i].y - mouse.y, dd = Math.sqrt(dx * dx + dy * dy);
+        if (dd < 170) {
+          ctx.strokeStyle = 'rgba(' + ACC + ',' + (.6 * (1 - dd / 170)) + ')';
+          ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(mouse.x, mouse.y); ctx.lineTo(nodes[i].x, nodes[i].y); ctx.stroke();
+        }
+      }
+    }
+
+    /* nodos */
+    ctx.font = '10px "Courier New", monospace'; ctx.textBaseline = 'middle';
+    for (i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      if (!reduce) {
+        n.timer -= 1 / 60;
+        if (n.timer < 0) {
+          if (n.vuln) { n.vuln = false; n.flash = 1; n.timer = rnd(10, 25); }
+          else { n.vuln = Math.random() < .5; n.timer = rnd(8, 22); }
+        }
+        if (n.flash > 0) n.flash -= .006;
+      }
+      var col2 = n.vuln ? BAD : ACC, size = n.type === 'device' ? 3.2 : 7;
+      var glow = ctx.createRadialGradient(n.x, n.y, 0, n.x, n.y, size * 3.2);
+      glow.addColorStop(0, 'rgba(' + (n.flash > 0 ? OK : col2) + ',' + (n.type === 'device' ? .35 : .5) + ')');
+      glow.addColorStop(1, 'rgba(' + col2 + ',0)');
+      ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(n.x, n.y, size * 3.2, 0, 6.283); ctx.fill();
+
+      ctx.lineWidth = 1.4;
+      ctx.strokeStyle = 'rgba(' + (n.flash > 0 ? OK : col2) + ',.95)';
+      ctx.fillStyle = dark ? 'rgba(10,15,28,.85)' : 'rgba(255,255,255,.9)';
+      if (n.type === 'server') {
+        ctx.beginPath(); ctx.rect(n.x - 6, n.y - 6, 12, 12); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(n.x - 3.5, n.y - 1.8); ctx.lineTo(n.x + 3.5, n.y - 1.8); ctx.moveTo(n.x - 3.5, n.y + 2); ctx.lineTo(n.x + 3.5, n.y + 2); ctx.stroke();
+      } else if (n.type === 'shield') {
+        hex(n.x, n.y, 8); ctx.fill(); ctx.stroke();
+        ctx.beginPath(); ctx.arc(n.x, n.y, 2, 0, 6.283); ctx.fillStyle = 'rgba(' + (n.flash > 0 ? OK : col2) + ',.95)'; ctx.fill();
+      } else {
+        ctx.beginPath(); ctx.arc(n.x, n.y, 3.2, 0, 6.283); ctx.fillStyle = 'rgba(' + (n.flash > 0 ? OK : col2) + ',.95)'; ctx.fill();
+      }
+      if (n.showLabel || n.vuln || n.flash > 0) {
+        var txt = n.label;
+        ctx.fillStyle = 'rgba(' + (n.vuln ? BAD : n.flash > 0 ? OK : ACC) + ',' + (n.vuln || n.flash > 0 ? .9 : .7) + ')';
+        ctx.fillText(txt, n.x + 12, n.y - 11);
+      }
+    }
+
+    if (running && visible && !reduce) requestAnimationFrame(draw);
+  }
+
+  function start() { if (running && visible && !reduce) requestAnimationFrame(draw); }
+  hero.addEventListener('mousemove', function (ev) { var r = cv.getBoundingClientRect(); mouse.x = ev.clientX - r.left; mouse.y = ev.clientY - r.top; });
+  hero.addEventListener('mouseleave', function () { mouse.x = mouse.y = -999; });
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (en) { visible = en[0].isIntersecting; if (visible) start(); }).observe(hero);
+  }
+  theme(); build(); draw(performance.now()); start();
+  window.addEventListener('resize', function () { build(); if (reduce) draw(performance.now()); });
+}
+initNet(document.getElementById('top'), document.getElementById('heroBg'), document.getElementById('heroCanvas'), document.getElementById('heroVideo'), 120);
+
+var pSec = document.getElementById('productos');
+initNet(pSec, pSec.querySelector('.products-bg'), document.getElementById('productsCanvas'), null, 220);
+
+(function () {
+  var header = document.querySelector('header'), b = document.querySelector('.nav-burger'), nav = document.getElementById('navLinks');
+  if (!header || !b || !nav) return;
+  function set(open) { header.classList.toggle('menu-open', open); b.setAttribute('aria-expanded', String(open)); b.setAttribute('aria-label', open ? 'Close menu' : 'Open menu'); }
+  b.addEventListener('click', function (e) { e.stopPropagation(); set(!header.classList.contains('menu-open')); });
+  nav.addEventListener('click', function (e) { if (e.target.closest('.nav-dropdown a')) set(false); });
+  document.addEventListener('click', function (e) { if (!header.contains(e.target)) set(false); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 900) set(false); });
+})();
+(function () {
+  var root = document.querySelector('.tm'); if (!root) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var cards = [].slice.call(root.querySelectorAll('.tm-card'));
+  var panels = [].slice.call(root.querySelectorAll('.tm-panel'));
+
+  function count(panel) {
+    [].forEach.call(panel.querySelectorAll('[data-count]'), function (el) {
+      var to = +el.getAttribute('data-count'), pre = el.getAttribute('data-prefix') || '';
+      if (reduce) { el.textContent = pre + to; return; }
+      var t0 = performance.now(), dur = 900;
+      (function tick(now) {
+        var k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        el.textContent = pre + Math.round(to * e);
+        if (k < 1) requestAnimationFrame(tick);
+      })(t0);
+    });
+  }
+  function openTab(panel, i) {
+    var tabs = panel.querySelectorAll('.tm-tab'), panes = panel.querySelectorAll('.tm-pane');
+    [].forEach.call(tabs, function (t, k) { t.setAttribute('aria-selected', k === i); t.tabIndex = k === i ? 0 : -1; });
+    [].forEach.call(panes, function (p, k) { p.hidden = k !== i; });
+    var ind = panel.querySelector('.tm-ind'), t = tabs[i];
+    ind.style.left = t.offsetLeft + 'px'; ind.style.width = t.offsetWidth + 'px';
+  }
+  function select(i, focus) {
+    cards.forEach(function (c, k) { c.setAttribute('aria-selected', k === i); c.tabIndex = k === i ? 0 : -1; });
+    panels.forEach(function (p, k) { p.hidden = k !== i; });
+    openTab(panels[i], 0); count(panels[i]);
+    if (focus) cards[i].focus();
+  }
+  cards.forEach(function (c, i) {
+    c.addEventListener('click', function () { select(i); });
+    c.addEventListener('keydown', function (e) {
+      var d = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 }[e.key];
+      if (d) { e.preventDefault(); select((i + d + cards.length) % cards.length, true); }
+    });
+  });
+  panels.forEach(function (p) {
+    var tabs = [].slice.call(p.querySelectorAll('.tm-tab'));
+    tabs.forEach(function (t, i) {
+      t.addEventListener('click', function () { openTab(p, i); });
+      t.addEventListener('keydown', function (e) {
+        var d = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (d) { e.preventDefault(); var n = (i + d + tabs.length) % tabs.length; openTab(p, n); tabs[n].focus(); }
+      });
+    });
+  });
+  [].concat(cards, panels).forEach(function (el) {
+    el.addEventListener('mousemove', function (e) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--mx', (e.clientX - r.left) + 'px'); el.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+  });
+  window.addEventListener('resize', function () {
+    panels.forEach(function (p) { if (!p.hidden) { var k = [].findIndex.call(p.querySelectorAll('.tm-tab'), function (t) { return t.getAttribute('aria-selected') === 'true'; }); openTab(p, Math.max(0, k)); } });
+  });
+  select(0);
+})();
+
+</script>
+<script>
+(function () {
+  var card = document.querySelector('.hero-report');
+  if (!card) return;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var R = [
+    ['Web analysis', 58, 61, 49, 15, [['crit','SQL injection in the login form'],['high','Sessions without configured expiry'],['med','Missing security headers'],['low','Server version exposed']], ['ISO 27001','ENS']],
+    ['Red interna', 66, 74, 60, 11, [['high','Insufficient network segmentation'],['high','Protocolos obsoletos habilitados'],['med','Devices without security agent'],['low','Outdated asset inventory']], ['ENS','ISO 27001']],
+    ['Cloud', 71, 80, 66, 9, [['crit','Unencrypted public storage'],['high','Excessive administrator permissions'],['med','Activity records without retention'],['low','Incomplete resource tagging']], ['ISO 27001','RGPD']],
+    ['Wi-Fi corporativa', 63, 68, 55, 8, [['high','Guest network not isolated'],['med','Clave compartida entre empleados'],['med','Unauthorized access points'],['low','Pending key rotation']], ['ENS','NIS2']],
+    ['Social engineering', 54, 59, 47, 10, [['crit','Credentials entered in simulated phishing'],['high','Spoofed emails not filtered'],['med','Outdated awareness training'],['low','Little-known reporting channel']], ['RGPD','NIS2']],
+    ['ISO 27001', 77, 84, 70, 7, [['med','Risk analysis not up to date'],['med','Incomplete access review'],['low','Partial incident log'],['low','Security objectives not measured']], ['ISO 27001','NIS2']],
+    ['NIS2', 69, 72, 58, 13, [['high','Incident notification without a process'],['high','Supplier risk not assessed'],['med','Continuity measures not tested'],['low','Owners not formalized']], ['NIS2','DORA']],
+    ['Workstations', 74, 79, 71, 8, [['high','Unencrypted laptop disks'],['med','Pending system patches'],['med','Antivirus with outdated signatures'],['low','Unrestricted USB ports']], ['ENS','ISO 27001']],
+    ['Backup and continuity', 61, 66, 52, 10, [['crit','Backups not verified'],['high','No backup outside the main network'],['med','Recovery plan not tested'],['low','Undocumented backup retention']], ['DORA','NIS2']],
+    ['Correo corporativo', 68, 73, 62, 9, [['high','SPF and DMARC misconfigured'],['high','Uncontrolled automatic forwarding'],['med','Dangerous attachments not blocked'],['low','Encryption in transit not enforced']], ['RGPD','ENS']],
+    ['Mobile app', 65, 70, 57, 12, [['crit','API keys embedded in the app'],['med','No certificate pinning'],['med','Permisos innecesarios solicitados'],['low','Debug logs enabled']], ['RGPD','ISO 27001']],
+    ['External perimeter', 59, 63, 54, 14, [['crit','Remote access without two-factor authentication'],['high','Servicios expuestos a internet'],['med','Certificates close to expiry'],['low','Service banners exposed']], ['NIS2','ENS']],
+    ['Proveedores TIC', 57, 62, 50, 9, [['high','Contracts without security clauses'],['high','Third-party risk not assessed'],['med','No inventory of critical suppliers'],['low','Annual review pending']], ['DORA','NIS2']],
+    ['Record of processing activities', 70, 74, 63, 8, [['high','No DPIA for high-risk processing'],['med','Incomplete activity log'],['med','Deletion periods not defined'],['low','Outdated information clauses']], ['RGPD','ENS']],
+    ['Access management', 64, 69, 58, 10, [['high','Privileged accounts not reviewed'],['med','Former employee accounts still active'],['med','No MFA on internal services'],['low','Inconsistent password expiry']], ['ISO 27001','ENS']],
+    ['Customer service chatbot', 58, 61, 49, 15, [['crit','Personal data without DPIA'],['high','No prompt injection filter'],['med','Conversation logs without retention policy'],['low','Incomplete AI notice to users']], ['AI Act','RGPD']],
+    ['HR assistant', 52, 55, 44, 12, [['crit','Automated assessment without human oversight'],['high','Bias not assessed'],['med','Model provider without data contract'],['low','Incomplete system register']], ['AI Act','RGPD']],
+    ['Development copilot', 66, 70, 60, 9, [['high','Code with secrets in prompts'],['med','Unapproved third-party tools'],['med','Repository access without least privilege'],['low','Undocumented output review']], ['ISO 42001','ISO 27001']],
+    ['RAG over documents', 63, 68, 55, 10, [['high','Document access without per-user controls'],['high','Data leakage between departments'],['med','Unencrypted vector index'],['low','Uncited sources']], ['ISO 42001','ISO 27001']],
+    ['Agent with tools', 47, 52, 40, 14, [['crit','Agent with unrestricted write permissions'],['high','API calls without human confirmation'],['med','API keys in configuration'],['low','Incomplete execution traces']], ['ISO 42001','AI Act']],
+    ['Shadow AI', 54, 59, 47, 11, [['crit','Customer data in free tools'],['high','No inventory of AI use'],['med','No approved usage policy'],['low','AI training not completed']], ['AI Act','ISO 42001']],
+    ['Scoring system', 61, 66, 52, 8, [['high','No documented AI Act classification'],['high','No fundamental rights impact assessment (FRIA)'],['med','Outdated bias metrics'],['low','Partial technical documentation']], ['AI Act','ISO 42001']]
+  ];
+  var SEV = { crit: 'Critical', high: 'High', med: 'Medium', low: 'Low' };
+  var q = function (sel) { return card.querySelector(sel); };
+  var lis = card.querySelectorAll('.rp-list li');
+  var comp = card.querySelectorAll('.rp-comp > div');
+  var order = [], last = -1;
+
+  function next() {
+    if (!order.length) {
+      order = R.map(function (_, i) { return i; });
+      for (var i = order.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = order[i]; order[i] = order[j]; order[j] = t; }
+      if (order[order.length - 1] === last && order.length > 1) { order.unshift(order.pop()); }
+    }
+    last = order.pop();
+    return R[last];
+  }
+
+  function render(r) {
+    var sc = r[1], lvl = sc >= 80 ? 'low' : sc >= 60 ? 'med' : sc >= 40 ? 'high' : 'crit';
+    var txt = { low: 'low', med: 'medium', high: 'high', crit: 'critical' }[lvl];
+    card.classList.remove('r-low', 'r-med', 'r-high', 'r-crit'); card.classList.add('r-' + lvl);
+    q('.rp-tag').textContent = r[0];
+    q('.rp-arc').style.setProperty('--off', 100 - sc);
+    q('.rp-score-num strong').textContent = sc;
+    q('.rp-score-txt b').textContent = 'Risk level: ' + txt;
+    q('.rp-score-txt span').textContent = r[4] + ' acciones priorizadas';
+    r[5].forEach(function (f, i) {
+      var tag = lis[i].querySelector('i'); tag.className = 'sev s-' + f[0]; tag.textContent = SEV[f[0]];
+      lis[i].querySelector('span').textContent = f[1];
+    });
+    [r[2], r[3]].forEach(function (v, i) {
+      comp[i].querySelector('em').style.setProperty('--w', v + '%');
+      comp[i].querySelector('label').textContent = r[6][i];
+      comp[i].querySelector('b').textContent = v + '%';
+    });
+  }
+
+  function show(animate) {
+    var r = next();
+    if (!animate || reduce) { render(r); return; }
+    card.classList.add('swap');
+    setTimeout(function () {
+      card.classList.remove('run');
+      render(r);
+      void card.offsetWidth;
+      card.classList.remove('swap');
+      card.classList.add('run');
+    }, 380);
+  }
+
+  show(false);
+  setInterval(function () { if (!document.hidden) show(true); }, 7000);
+})();
+</script>
+</body>
+</html>
